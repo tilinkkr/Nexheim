@@ -1,0 +1,188 @@
+{
+  "preamble": {
+    "title": "nexguard/risk-registry",
+    "description": "Aiken contracts for project 'nexguard/risk-registry'",
+    "version": "0.0.0",
+    "plutusVersion": "v3",
+    "compiler": {
+      "name": "Aiken",
+      "version": "v1.1.19+e525483"
+    },
+    "license": "Apache-2.0"
+  },
+  "validators": [
+    {
+      "title": "placeholder.placeholder.mint",
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Data"
+        }
+      },
+      "compiledCode": "58d001010029800aba2aba1aab9eaab9dab9a48888966002646465300130053754003300700398038012444b30013370e9000001c4c98dd7180518049baa0048acc004cdc3a400400713233226300b001300b300c0013009375400915980099b874801000e264c601460126ea80122b30013370e9003001c4c8cc898dd698058009805980600098049baa0048acc004cdc3a40100071326300a3009375400913233226375a60160026016601800260126ea8011007200e401c80390070c018c01c004c018004c00cdd5003452689b2b20021",
+      "hash": "f2388d136606a27c4a531d0040c3e12e07eb95cd5011793c160707dc"
+    },
+    {
+      "title": "placeholder.placeholder.spend",
+      "datum": {
+        "title": "_datum",
+        "schema": {
+          "$ref": "#/definitions/Data"
+        }
+      },
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Data"
+        }
+      },
+      "compiledCode": "58d001010029800aba2aba1aab9eaab9dab9a48888966002646465300130053754003300700398038012444b30013370e9000001c4c98dd7180518049baa0048acc004cdc3a400400713233226300b001300b300c0013009375400915980099b874801000e264c601460126ea80122b30013370e9003001c4c8cc898dd698058009805980600098049baa0048acc004cdc3a40100071326300a3009375400913233226375a60160026016601800260126ea8011007200e401c80390070c018c01c004c018004c00cdd5003452689b2b20021",
+      "hash": "f2388d136606a27c4a531d0040c3e12e07eb95cd5011793c160707dc"
+    },
+    {
+      "title": "placeholder.placeholder.withdraw",
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Data"
+        }
+      },
+      "compiledCode": "58d001010029800aba2aba1aab9eaab9dab9a48888966002646465300130053754003300700398038012444b30013370e9000001c4c98dd7180518049baa0048acc004cdc3a400400713233226300b001300b300c0013009375400915980099b874801000e264c601460126ea80122b30013370e9003001c4c8cc898dd698058009805980600098049baa0048acc004cdc3a40100071326300a3009375400913233226375a60160026016601800260126ea8011007200e401c80390070c018c01c004c018004c00cdd5003452689b2b20021",
+      "hash": "f2388d136606a27c4a531d0040c3e12e07eb95cd5011793c160707dc"
+    },
+    {
+      "title": "placeholder.placeholder.publish",
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Data"
+        }
+      },
+      "compiledCode": "58d001010029800aba2aba1aab9eaab9dab9a48888966002646465300130053754003300700398038012444b30013370e9000001c4c98dd7180518049baa0048acc004cdc3a400400713233226300b001300b300c0013009375400915980099b874801000e264c601460126ea80122b30013370e9003001c4c8cc898dd698058009805980600098049baa0048acc004cdc3a40100071326300a3009375400913233226375a60160026016601800260126ea8011007200e401c80390070c018c01c004c018004c00cdd5003452689b2b20021",
+      "hash": "f2388d136606a27c4a531d0040c3e12e07eb95cd5011793c160707dc"
+    },
+    {
+      "title": "placeholder.placeholder.vote",
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Data"
+        }
+      },
+      "compiledCode": "58d001010029800aba2aba1aab9eaab9dab9a48888966002646465300130053754003300700398038012444b30013370e9000001c4c98dd7180518049baa0048acc004cdc3a400400713233226300b001300b300c0013009375400915980099b874801000e264c601460126ea80122b30013370e9003001c4c8cc898dd698058009805980600098049baa0048acc004cdc3a40100071326300a3009375400913233226375a60160026016601800260126ea8011007200e401c80390070c018c01c004c018004c00cdd5003452689b2b20021",
+      "hash": "f2388d136606a27c4a531d0040c3e12e07eb95cd5011793c160707dc"
+    },
+    {
+      "title": "placeholder.placeholder.propose",
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Data"
+        }
+      },
+      "compiledCode": "58d001010029800aba2aba1aab9eaab9dab9a48888966002646465300130053754003300700398038012444b30013370e9000001c4c98dd7180518049baa0048acc004cdc3a400400713233226300b001300b300c0013009375400915980099b874801000e264c601460126ea80122b30013370e9003001c4c8cc898dd698058009805980600098049baa0048acc004cdc3a40100071326300a3009375400913233226375a60160026016601800260126ea8011007200e401c80390070c018c01c004c018004c00cdd5003452689b2b20021",
+      "hash": "f2388d136606a27c4a531d0040c3e12e07eb95cd5011793c160707dc"
+    },
+    {
+      "title": "placeholder.placeholder.else",
+      "redeemer": {
+        "schema": {}
+      },
+      "compiledCode": "58d001010029800aba2aba1aab9eaab9dab9a48888966002646465300130053754003300700398038012444b30013370e9000001c4c98dd7180518049baa0048acc004cdc3a400400713233226300b001300b300c0013009375400915980099b874801000e264c601460126ea80122b30013370e9003001c4c8cc898dd698058009805980600098049baa0048acc004cdc3a40100071326300a3009375400913233226375a60160026016601800260126ea8011007200e401c80390070c018c01c004c018004c00cdd5003452689b2b20021",
+      "hash": "f2388d136606a27c4a531d0040c3e12e07eb95cd5011793c160707dc"
+    },
+    {
+      "title": "risk_registry.risk_registry.spend",
+      "datum": {
+        "title": "datum",
+        "schema": {
+          "$ref": "#/definitions/risk_registry~1RiskDatum"
+        }
+      },
+      "redeemer": {
+        "title": "redeemer",
+        "schema": {
+          "$ref": "#/definitions/risk_registry~1RiskRedeemer"
+        }
+      },
+      "compiledCode": "59011301010029800aba2aba1aab9faab9eaab9dab9a48888896600264653001300700198039804000cc01c0092225980099b8748008c01cdd500144ca60026016003300b300c00198041baa004899912cc004cdc3a400060146ea801a264b30015980099b8948000006266e2400520c8018a504029198009801001d28528a0148a5040286eb4c034c02cdd500346600260020054a14a280490091bac300b300c300c300c300c300c300c300c300c300937540044b30010018a518a50402c91112cc004cdc3a400000513232598009809001400e2c8080dd6980800098069baa0088acc004cdc3a400400515980098069baa008800c5900e45900b201618041baa0028b200c180380098019baa0078a4d13656400401",
+      "hash": "a493f1e0aad78a3f5ac0ce96ec0a2f2e322eea29e06cea8ffe5272fd"
+    },
+    {
+      "title": "risk_registry.risk_registry.else",
+      "redeemer": {
+        "schema": {}
+      },
+      "compiledCode": "59011301010029800aba2aba1aab9faab9eaab9dab9a48888896600264653001300700198039804000cc01c0092225980099b8748008c01cdd500144ca60026016003300b300c00198041baa004899912cc004cdc3a400060146ea801a264b30015980099b8948000006266e2400520c8018a504029198009801001d28528a0148a5040286eb4c034c02cdd500346600260020054a14a280490091bac300b300c300c300c300c300c300c300c300c300937540044b30010018a518a50402c91112cc004cdc3a400000513232598009809001400e2c8080dd6980800098069baa0088acc004cdc3a400400515980098069baa008800c5900e45900b201618041baa0028b200c180380098019baa0078a4d13656400401",
+      "hash": "a493f1e0aad78a3f5ac0ce96ec0a2f2e322eea29e06cea8ffe5272fd"
+    }
+  ],
+  "definitions": {
+    "ByteArray": {
+      "dataType": "bytes"
+    },
+    "Data": {
+      "title": "Data",
+      "description": "Any Plutus data."
+    },
+    "Int": {
+      "dataType": "integer"
+    },
+    "List$ByteArray": {
+      "dataType": "list",
+      "items": {
+        "$ref": "#/definitions/ByteArray"
+      }
+    },
+    "risk_registry/PolicyId": {
+      "title": "PolicyId",
+      "dataType": "bytes"
+    },
+    "risk_registry/RiskDatum": {
+      "title": "RiskDatum",
+      "anyOf": [
+        {
+          "title": "RiskDatum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "policy_id",
+              "$ref": "#/definitions/risk_registry~1PolicyId"
+            },
+            {
+              "title": "risk_score",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "flags",
+              "$ref": "#/definitions/List$ByteArray"
+            }
+          ]
+        }
+      ]
+    },
+    "risk_registry/RiskRedeemer": {
+      "title": "RiskRedeemer",
+      "anyOf": [
+        {
+          "title": "UpdateScore",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "new_score",
+              "$ref": "#/definitions/Int"
+            }
+          ]
+        },
+        {
+          "title": "FlagScam",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": []
+        }
+      ]
+    }
+  }
+}

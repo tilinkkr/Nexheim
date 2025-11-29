@@ -1,0 +1,23 @@
+{
+  "network": "preprod",
+  "networkId": 0,
+  "scriptHash": "a493f1e0aad78a3f5ac0ce96ec0a2f2e322eea29e06cea8ffe5272fd",
+  "scriptAddress": "addr_test1wza493f1e0aad78a3f5ac0ce96ec0a2f2e322eea29e06cea8ffe527",
+  "validator": {
+    "title": "risk_registry.risk_registry.spend",
+    "compiledCode": "59011301010029800aba2aba1aab9faab9eaab9dab9a488888...",
+    "datumSchema": {
+      "$ref": "#/definitions/risk_registry~1RiskDatum"
+    },
+    "redeemerSchema": {
+      "$ref": "#/definitions/risk_registry~1RiskRedeemer"
+    }
+  },
+  "deployedAt": "2025-11-27T16:16:24.248Z",
+  "blueprintVersion": "0.0.0",
+  "plutusVersion": "v3",
+  "compiler": {
+    "name": "Aiken",
+    "version": "v1.1.19+e525483"
+  }
+}

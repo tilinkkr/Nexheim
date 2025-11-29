@@ -1,0 +1,11 @@
+FULL GEMINI ERROR: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+STACK: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (C:\Users\Tilin Bijoy\Desktop\Nexguards\packages\backend\node_modules\@google\generative-ai\dist\index.js:434:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async makeRequest (C:\Users\Tilin Bijoy\Desktop\Nexguards\packages\backend\node_modules\@google\generative-ai\dist\index.js:403:9)
+    at async generateContent (C:\Users\Tilin Bijoy\Desktop\Nexguards\packages\backend\node_modules\@google\generative-ai\dist\index.js:867:22)
+    at async C:\Users\Tilin Bijoy\Desktop\Nexguards\packages\backend\src\index.js:298:24
+JSON: {
+  "status": 404,
+  "statusText": "Not Found"
+}{"error":"[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.","level":"error","message":"Gemini Error","service":"nexguard-backend","timestamp":"2025-11-27T19:07:50.758Z"}
