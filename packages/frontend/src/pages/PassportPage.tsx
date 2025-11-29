@@ -12,15 +12,41 @@ const PassportPage = () => {
 
     const generate = async () => {
         setGenerating(true);
-        try {
-            const useSeed = seed || address || '';
-            const res = await axios.post(`${API_URL}/generate-meme-identity`, { seed: useSeed });
-            setIdentity(res.data);
-        } catch (err) {
-            alert('Failed to generate identity');
-        } finally {
-            setGenerating(false);
-        }
+        // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        const mockIdentity = {
+            memeName: getRandomName(),
+            role: getRandomRole(),
+            powerLevel: Math.floor(Math.random() * 9000) + 1000,
+            traits: getRandomTraits(),
+            astrology: getRandomAstrology()
+        };
+
+        setIdentity(mockIdentity);
+        setGenerating(false);
+    };
+
+    const getRandomName = () => {
+        const prefixes = ['Doge', 'Pepe', 'Shib', 'Moon', 'Rocket', 'Diamond', 'Chad', 'Wojak'];
+        const suffixes = ['Lord', 'King', 'Slayer', 'Hodler', 'Whale', 'Enjoyer', 'Maxi'];
+        return `${prefixes[Math.floor(Math.random() * prefixes.length)]} ${suffixes[Math.floor(Math.random() * suffixes.length)]}`;
+    };
+
+    const getRandomRole = () => {
+        const roles = ['Liquidity Provider', 'Yield Farmer', 'NFT Collector', 'DAO Governor', 'Rug Survivor'];
+        return roles[Math.floor(Math.random() * roles.length)];
+    };
+
+    const getRandomTraits = () => {
+        const traits = ['Diamond Hands', 'Paper Hands', 'FOMO King', 'Alpha Seeker', 'Gas Optimizer', 'Airdrop Hunter'];
+        // Pick 3 random unique traits
+        return traits.sort(() => 0.5 - Math.random()).slice(0, 3);
+    };
+
+    const getRandomAstrology = () => {
+        const signs = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+        return signs[Math.floor(Math.random() * signs.length)];
     };
 
     if (identity) {

@@ -50,3 +50,9 @@ h6 {
   font-family: 'Orbitron', 'Inter', sans-serif;
   letter-spacing: 0.02em;
 }
+.bg-surface { background-color: rgba(15, 17, 21, 0.8); }
+.border-glass-outline { border-color: rgba(255, 255, 255, 0.1); }
+.text-neon { color: #6366f1; }
+.bg-neon { background-color: #6366f1; }
+.font-heading { font-family: 'Orbitron', sans-serif; }
+.text-danger { color: #ef4444; }

@@ -62,6 +62,11 @@ const TradePage = lazy(() => import('./pages/TradePage'));
 const MintPage = lazy(() => import('./pages/MintPage'));
 const PassportPage = lazy(() => import('./pages/PassportPage'));
 const AuditsPage = lazy(() => import('./pages/AuditsPage'));
+const HypeAnalyzerPage = lazy(() => import('./pages/HypeAnalyzerPage'));
+const TokenDetailPage = lazy(() => import('./pages/TokenDetailPage'));
+const PolicyXRay = lazy(() => import('./pages/PolicyXRay'));
+const BundleInspector = lazy(() => import('./pages/BundleInspector'));
+const SafetyTools = lazy(() => import('./pages/SafetyTools'));
 
 // Loading Fallback
 const PageLoader = () => (
@@ -100,6 +105,8 @@ export default function App() {
                       <Footer />
                     </>
                   } />
+                  <Route path="/bundle-inspector" element={<BundleInspector />} />
+                  <Route path="/tools" element={<SafetyTools />} />
 
                   {/* Protected App Routes */}
                   <Route path="/app/*" element={
@@ -110,8 +117,20 @@ export default function App() {
                         <Route path="/passport" element={<PassportPage />} />
                         <Route path="/audits" element={<AuditsPage />} />
                         <Route path="/trade" element={<TradePage />} />
+                        <Route path="/trade" element={<TradePage />} />
+                        <Route path="/hype-analyzer" element={<HypeAnalyzerPage />} />
+                        <Route path="/token/:id" element={<TokenDetailPage />} />
+                        <Route path="/xray" element={<PolicyXRay />} />
                       </Routes>
                     </DashboardLayout>
+                  } />
+                  <Route path="*" element={
+                    <div className="min-h-screen flex items-center justify-center text-white">
+                      <div className="text-center">
+                        <h1 className="text-4xl font-bold mb-4">404</h1>
+                        <p>Page not found: {window.location.pathname}</p>
+                      </div>
+                    </div>
                   } />
                 </Routes>
               </Suspense>

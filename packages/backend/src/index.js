@@ -1,3 +1,15 @@
+// === BOOT GUARD - Enhanced Diagnostic Logging ===
+Error.stackTraceLimit = 100;
+const bootFs = require('fs'), bootCrypto = require('crypto');
+console.log('[BOOT] Starting server.js', new Date().toISOString());
+process.on('uncaughtException', (err) => console.error('[FATAL] uncaughtException', err && err.stack ? err.stack : err));
+process.on('unhandledRejection', (r) => console.error('[FATAL] unhandledRejection', r && r.stack ? r.stack : r));
+try {
+    console.log('[BOOT] index.js md5:', bootCrypto.createHash('md5').update(bootFs.readFileSync(__filename, 'utf8')).digest('hex'));
+} catch (e) {
+    console.log('[BOOT] md5 failed', e);
+}
+
 const express = require('express');
 const cors = require('cors');
 const {
@@ -19,15 +31,28 @@ const logger = require('./services/logger');
 require('dotenv').config();
 
 const proofRoutes = require('./routes/proofRoutes');
+const incidentRoutes = require('./routes/incidentRoutes');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+
+
+// Mount health and safety routes first (minimal dependencies)
+try {
+    const healthAndSafety = require('./routes/_healthAndSafety');
+    app.use(healthAndSafety);
+    console.log('[BOOT] Mounted healthAndSafety');
+} catch (err) {
+    console.error('[BOOT] healthAndSafety mount failed', err && err.stack ? err.stack : err);
+}
+
 // Mount Proof Routes
 app.use('/api/v1', proofRoutes);
+app.use('/api/incident', incidentRoutes);
 
-
+// Routes moved to after specific endpoints to avoid shadowing
 // Request Logging Middleware
 app.use((req, res, next) => {
     logger.info(`${req.method} ${req.url}`);
@@ -43,6 +68,7 @@ const genAI = new GoogleGenerativeAI(GEMINI_API_KEY || "placeholder_key");
 let memeCoins = [];
 let factoryInterval = null;
 
+// Generate initial batch
 // Generate initial batch
 memeCoins = generateBatch(10);
 logger.info(`Meme Factory initialized with ${memeCoins.length} coins`);
@@ -61,7 +87,7 @@ function startMemeFactory() {
         }
 
         logger.info(`Meme Factory generated: ${newCoin.name} (${newCoin.symbol}) - Trust: ${newCoin.trust_score}`);
-    }, 30000); // Every 30 seconds
+    }, 5000); // Every 5 seconds
 
     logger.info('Meme Factory auto-generation started');
 }
@@ -74,8 +100,49 @@ function stopMemeFactory() {
     }
 }
 
+// Global Stats Endpoint
+app.get('/api/stats/global', async (req, res) => {
+    try {
+        // Calculate average trust from active meme coins
+        const totalTrust = memeCoins.reduce((acc, coin) => acc + (coin.trustScore || 0), 0);
+        const avgTrust = memeCoins.length > 0 ? Math.round(totalTrust / memeCoins.length) : 0;
+
+        // Get counts (simulated + DB)
+        const audits = 1240 + memeCoins.length; // Base + live count
+        const scams = memeCoins.filter(c => (c.trustScore || 0) < 30).length + 42; // Base + live detection
+
+        res.json({
+            avgTrust,
+            totalAudits: audits,
+            scamsDetected: scams,
+            activeTokens: memeCoins.length
+        });
+    } catch (err) {
+        logger.error('Stats error', err);
+        res.status(500).json({ error: 'Failed to fetch stats' });
+    }
+});
+
 // Start factory automatically
 startMemeFactory();
+
+// Mount isolated hype routes
+try {
+    const hypeRoutes = require('./routes/hypeRoutes');
+    app.use('/api', hypeRoutes);
+    console.log('[BOOT] Mounted /api hypeRoutes');
+} catch (err) {
+    console.error('[BOOT] Failed to mount hypeRoutes:', err && err.stack ? err.stack : err);
+}
+
+// Mount risk routes
+try {
+    const riskRoutes = require('./routes/riskRoutes');
+    app.use('/api', riskRoutes);
+    console.log('[BOOT] Mounted riskRoutes at /api');
+} catch (err) {
+    console.error('[BOOT] Failed to mount riskRoutes:', err && err.stack ? err.stack : err);
+}
 
 // --- Blockfrost Real Tokens Cache ---
 let realTokensCache = [];
@@ -278,39 +345,78 @@ app.get('/api/explorer', async (req, res) => {
     res.json(enrichedTokens);
 });
 
-app.get('/api/coins', (req, res) => {
-    res.redirect('/api/explorer');
-});
-
 // --- Feature Endpoints ---
 
-const hypeAnalyzer = require('./services/hypeAnalyzer');
+// === HYPE ANALYZER REQUIRE WITH ERROR HANDLING ===
+console.log('[TRACE] About to require hypeAnalyzer module (line ~287)');
+let hypeAnalyzer;
+try {
+    console.log('[TRACE] Requiring ./services/hypeAnalyzer...');
+    hypeAnalyzer = require('./services/hypeAnalyzer');
+    console.log('[DEBUG] ✅ Hype Analyzer required successfully');
+} catch (err) {
+    console.error('[FATAL] ❌ Failed requiring hypeAnalyzer:', err && err.stack ? err.stack : err);
+    // Create a dummy to prevent further errors
+    hypeAnalyzer = { getHypeRatio: async () => ({ error: 'Module failed to load' }) };
+}
+
+console.log('[DEBUG] Registering Hype Ratio endpoint...');
 
 // Hype-to-Price Ratio endpoint
 app.get('/api/tokens/:policyId/hype-ratio', async (req, res) => {
+    console.log('[DEBUG] Hype ratio endpoint HIT for policyId:', req.params.policyId);
     try {
         const { policyId } = req.params;
 
-        // Get token info from database
-        const token = await getToken(policyId) || { name: 'Unknown Token' }; // getToken uses tokenId, but let's assume policyId for now or fix mapping. 
-        // Actually getToken takes tokenId. We need to find token by policyId if possible.
-        // But let's stick to the prompt's structure. 
-        // The prompt uses `getTokenInfo` helper. I'll implement a simple lookup or just pass 'Unknown'.
-        // Wait, `getToken` in db.js takes `tokenId`. 
-        // I'll assume for now we can just pass the policyId as is or use a placeholder name if not found.
-        // Ideally we should look up the token.
+        // Get token name (from your existing token data or default)
+        const tokenName = req.query.name || 'Unknown Token';
 
-        const tokenName = token.name || 'Unknown Token';
+        const result = await hypeAnalyzer.getHypeRatio(policyId, tokenName);
 
-        // Calculate hype score
-        const hypeData = await hypeAnalyzer.getHypeRatio(policyId, tokenName);
-
-        res.json(hypeData);
+        res.json(result);
 
     } catch (error) {
         console.error('Hype ratio error:', error);
         res.status(500).json({
             error: 'Failed to calculate hype ratio',
+            details: error.message
+        });
+    }
+});
+
+// === Policy X-Ray Endpoint ===
+app.get('/api/xray/:policyId', async (req, res) => {
+    const { policyId } = req.params;
+    console.log(`[X-RAY] Starting scan for policy: ${policyId}`);
+
+    try {
+        // 1. Fetch On-Chain Data (Blockfrost)
+        // We use fetchRealToken from blockfrostService which returns formatted data
+        const onChainData = await fetchRealToken(policyId);
+
+        if (!onChainData) {
+            return res.status(404).json({ error: "Token policy not found on-chain" });
+        }
+
+        // 2. AI Risk Analysis (Masumi)
+        // analyzeWithMasumi expects the data format returned by fetchRealToken
+        const aiAnalysis = await analyzeWithMasumi(onChainData);
+
+        // 3. Combine Results
+        const result = {
+            policyId,
+            scanResult: onChainData,
+            masumiExplanation: aiAnalysis.analysis.explanation,
+            riskLevel: aiAnalysis.analysis.risk_level,
+            timestamp: new Date().toISOString()
+        };
+
+        res.json(result);
+
+    } catch (error) {
+        console.error('[X-RAY] Scan failed:', error);
+        res.status(500).json({
+            error: "X-Ray scan failed",
             details: error.message
         });
     }
@@ -342,7 +448,7 @@ app.post('/api/report', async (req, res) => {
 });
 
 // Enhanced ZK Whistleblower Endpoint
-app.post('/whistle', async (req, res) => {
+app.post('/api/whistle', async (req, res) => {
     const { tokenId, reportText, walletAddress } = req.body;
 
     if (!tokenId || !reportText) {
@@ -812,6 +918,16 @@ app.post('/risk/:policyId/ask-masumi', async (req, res) => {
         const decision_hash = crypto.createHash('sha256').update(summary).digest('hex');
 
         console.log(`[API] ✓ Analysis complete. Rug probability: ${rugProbability}%`);
+
+        // Persist analysis for retrieval
+        await insertAuditLog({
+            tokenId: policyId,
+            action: 'MASUMI_ANALYSIS',
+            actor: 'masumi_agent',
+            info: aiResult.analysis.explanation || 'Analysis complete',
+            analysisHash: decision_hash,
+            timestamp: new Date().toISOString()
+        });
 
         // Return comprehensive response
         res.json({

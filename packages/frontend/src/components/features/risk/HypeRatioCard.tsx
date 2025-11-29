@@ -1,40 +1,41 @@
-import { useState, useEffect } from 'react';
+import { useHypeRatio } from '../../../hooks/useHypeRatio';
 import { motion } from 'framer-motion';
 
-interface HypeRatioProps {
+interface HypeRatioCardProps {
     policyId: string;
+    tokenName?: string;
 }
 
-export function HypeRatioCard({ policyId }: HypeRatioProps) {
-    const [data, setData] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
+export function HypeRatioCard({ policyId, tokenName }: HypeRatioCardProps) {
+    const { data, loading, error } = useHypeRatio(policyId, tokenName);
 
-    useEffect(() => {
-        fetchHypeRatio();
-    }, [policyId]);
+    if (loading) {
+        return (
+            <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 rounded-xl p-6 border border-purple-500/20">
+                <div className="animate-pulse space-y-4">
+                    <div className="h-6 bg-purple-500/20 rounded w-1/2"></div>
+                    <div className="h-20 bg-purple-500/20 rounded"></div>
+                </div>
+            </div>
+        );
+    }
 
-    const fetchHypeRatio = async () => {
-        try {
-            setLoading(true);
-            const response = await fetch(`http://localhost:5001/api/tokens/${policyId}/hype-ratio`);
-            const result = await response.json();
-            setData(result);
-        } catch (error) {
-            console.error('Failed to fetch hype ratio:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    if (error) {
+        return (
+            <div className="bg-red-900/20 rounded-xl p-6 border border-red-500/30">
+                <p className="text-red-400">Failed to load: {error}</p>
+            </div>
+        );
+    }
 
-    if (loading) return <div className="animate-pulse h-32 bg-gray-800 rounded-xl"></div>;
     if (!data) return null;
 
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'overhyped': return 'text-red-400';
-            case 'undervalued': return 'text-green-400';
-            case 'cautious': return 'text-yellow-400';
-            default: return 'text-blue-400';
+    const getStatusColor = () => {
+        switch (data.status) {
+            case 'overhyped': return 'from-red-500 to-orange-500';
+            case 'undervalued': return 'from-green-500 to-emerald-500';
+            case 'balanced': return 'from-blue-500 to-cyan-500';
+            default: return 'from-gray-500 to-gray-600';
         }
     };
 
@@ -42,44 +43,30 @@ export function HypeRatioCard({ policyId }: HypeRatioProps) {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6"
+            className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 rounded-xl p-6 border border-purple-500/20"
         >
-            <div className="flex justify-between items-start mb-4">
-                <div>
-                    <h3 className="text-lg font-semibold text-white">Hype-to-Price Ratio</h3>
-                    <p className="text-sm text-gray-400">Market Sentiment Analysis</p>
-                </div>
-                <div className={`text-2xl font-bold ${getStatusColor(data.status)}`}>
-                    {data.ratio}
-                </div>
+            <h3 className="text-xl font-bold mb-4">🎯 Hype-to-Price Ratio</h3>
+
+            <div className={`text-6xl font-bold bg-gradient-to-r ${getStatusColor()} bg-clip-text text-transparent mb-4`}>
+                {data.ratio}
             </div>
 
-            <div className="mb-4">
-                <div className="flex items-center gap-2 mb-2">
-                    <span className={`px-2 py-1 rounded text-xs font-medium bg-opacity-20 ${getStatusColor(data.status).replace('text-', 'bg-')} ${getStatusColor(data.status)}`}>
-                        {data.status.toUpperCase()}
-                    </span>
-                    <span className="text-xs text-gray-500">Risk: {data.risk.toUpperCase()}</span>
-                </div>
-                <p className="text-sm text-gray-300">{data.explanation}</p>
-            </div>
+            <p className="text-2xl mb-6">{data.message}</p>
 
-            <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-gray-800">
-                <div className="text-center">
-                    <div className="text-xs text-gray-500">Hype Score</div>
-                    <div className="font-mono text-white">{data.hypeScore}/100</div>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="bg-black/30 rounded-lg p-3">
+                    <div className="text-sm text-gray-400">Hype Score</div>
+                    <div className="text-2xl font-bold text-purple-400">{data.hypeScore}/100</div>
                 </div>
-                <div className="text-center">
-                    <div className="text-xs text-gray-500">Price 24h</div>
-                    <div className={`font-mono ${parseFloat(data.priceChange) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                        {data.priceChange}%
+                <div className="bg-black/30 rounded-lg p-3">
+                    <div className="text-sm text-gray-400">Price Change</div>
+                    <div className={`text-2xl font-bold ${parseFloat(data.priceChange) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                        {parseFloat(data.priceChange) >= 0 ? '+' : ''}{data.priceChange}%
                     </div>
                 </div>
-                <div className="text-center">
-                    <div className="text-xs text-gray-500">Mentions</div>
-                    <div className="font-mono text-white">{data.breakdown.socialMentions}</div>
-                </div>
             </div>
+
+            <p className="text-sm text-gray-400">{data.explanation}</p>
         </motion.div>
     );
 }

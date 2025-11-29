@@ -23,5 +23,8 @@ export default defineConfig({
     commonjsOptions: {
       transformMixedEsModules: true
     }
+  },
+  optimizeDeps: {
+    include: ['react-force-graph-3d', 'three']
   }
 })

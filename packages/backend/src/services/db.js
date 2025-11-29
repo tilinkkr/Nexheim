@@ -143,6 +143,22 @@ function getToken(tokenId) {
     });
 }
 
+function getTokenByPolicyId(policyId) {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT * FROM tokens WHERE policyId = ?`;
+        db.get(sql, [policyId], (err, row) => {
+            if (err) reject(err);
+            else if (row) {
+                row.yaci_data = JSON.parse(row.yaci_data || '{}');
+                row.isDisputed = !!row.isDisputed;
+                resolve(row);
+            } else {
+                resolve(null);
+            }
+        });
+    });
+}
+
 function getAllTokens() {
     return new Promise((resolve, reject) => {
         const sql = `SELECT * FROM tokens ORDER BY created_at DESC`;
@@ -253,7 +269,7 @@ function getIdentity(address) {
 
 module.exports = {
     insertAuditLog, getAuditLogs,
-    insertToken, getToken, getAllTokens, updateTokenTrust,
+    insertToken, getToken, getTokenByPolicyId, getAllTokens, updateTokenTrust,
     insertReport, getReports,
     getVote, updateVote,
     saveIdentity, getIdentity,

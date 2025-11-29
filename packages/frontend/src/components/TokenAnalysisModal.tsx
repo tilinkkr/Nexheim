@@ -138,7 +138,7 @@ export default function TokenAnalysisModal({ token, onClose }: TokenAnalysisModa
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-            <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-gray-900 via-gray-900 to-black border border-gray-700 rounded-3xl shadow-2xl">
+            <div className="relative w-full max-w-6xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-gray-900 via-gray-900 to-black border border-gray-700 rounded-3xl shadow-2xl">
 
                 {/* Header */}
                 <div className="sticky top-0 z-10 bg-gradient-to-r from-gray-900 to-black border-b border-gray-700 p-6 flex justify-between items-start">
@@ -194,8 +194,8 @@ export default function TokenAnalysisModal({ token, onClose }: TokenAnalysisModa
 
                         {/* Rug Probability */}
                         <div className={`flex-1 p-6 rounded-2xl border-2 flex items-center gap-4 ${rugProb <= 20 ? 'bg-green-500/10 border-green-500/50' :
-                                rugProb <= 60 ? 'bg-yellow-500/10 border-yellow-500/50' :
-                                    'bg-red-500/10 border-red-500/50'
+                            rugProb <= 60 ? 'bg-yellow-500/10 border-yellow-500/50' :
+                                'bg-red-500/10 border-red-500/50'
                             }`}>
                             <div className="text-5xl">
                                 {rugProb <= 20 ? '🟢' : rugProb <= 60 ? '🟡' : '🔴'}

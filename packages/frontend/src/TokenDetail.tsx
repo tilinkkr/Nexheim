@@ -4,7 +4,8 @@ import './App.css'; // Reusing App.css for consistency
 import TradingPanel from './components/TradingPanel';
 import { useWallet } from './context/WalletContext';
 import API_URL from './apiConfig';
-import { HypeRatioCard } from './components/features/risk/HypeRatioCard';
+import HypeRatioCard from './components/hype/HypeRatioCard';
+import { useHypeRatio } from './hooks/useHypeRatio';
 import { RugMeter } from './components/features/risk/RugMeter';
 
 interface TokenDetailProps {
@@ -19,6 +20,7 @@ export default function TokenDetail({ token, onBack, onUpdate }: TokenDetailProp
     const [reportText, setReportText] = useState('');
     const [loading, setLoading] = useState(false);
     const [auditLog, setAuditLog] = useState<any>(null);
+    const { data: hypeData, loading: hypeLoading, error: hypeError } = useHypeRatio(token?.policyId, '60m');
 
     const handleSubmitReport = async () => {
         if (reportText.length <= 10) {
@@ -129,7 +131,6 @@ export default function TokenDetail({ token, onBack, onUpdate }: TokenDetailProp
                         </button>
                     </div>
                 </div>
-                </div>
                 <div className="detail-item">
                     <label>Token ID</label>
                     <span className="mono">{token.tokenId}</span>
@@ -141,71 +142,75 @@ export default function TokenDetail({ token, onBack, onUpdate }: TokenDetailProp
             </div>
 
             <div className="mt-6 mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <HypeRatioCard policyId={token.policyId} />
+                <HypeRatioCard data={hypeData} loading={hypeLoading} error={hypeError} />
                 <RugMeter policyId={token.policyId} />
             </div>
 
             {
-        token.explain && token.explain.length > 0 && (
-            <div className="risk-section">
-                <h3>Risk Analysis</h3>
-                <ul className="risk-list">
+                token.explain && token.explain.length > 0 && (
+                    <div className="risk-section">
+                        <h3>Risk Analysis</h3>
+                        <ul className="risk-list">
 
-                    {token.yaci_data && (
-                        <div className="yaci-data-section">
-                            <h3>Yaci Store Data</h3>
-                            <p><b>DEX:</b> {token.yaci_data.liquidity_info?.dex}</p>
-                            <p><b>Liquidity:</b> {token.yaci_data.liquidity_info?.total_liquidity_ada} ADA</p>
+                            {token.yaci_data && (
+                                <div className="yaci-data-section">
+                                    <h3>Yaci Store Data</h3>
+                                    <p><b>DEX:</b> {token.yaci_data.liquidity_info?.dex}</p>
+                                    <p><b>Liquidity:</b> {token.yaci_data.liquidity_info?.total_liquidity_ada} ADA</p>
+                                </div>
+                            )}
+
+                            {auditLog && (
+                                <div className="audit-section">
+                                    <h3>Audit Log Published</h3>
+                                    <div className="audit-details">
+                                        <p><b>Tx ID:</b> <span className="mono">{auditLog.txid}</span></p>
+                                        <p><b>Hash:</b> <span className="mono">{auditLog.analysisHash}</span></p>
+                                        <p><b>Time:</b> {new Date(auditLog.timestamp).toLocaleString()}</p>
+                                    </div>
+                                </div>
+                            )}
+
+                            <TradingPanel />
+                        </ul>
+
+                        <div className="actions-section">
+                            {!address && (
+                                <div className="mb-4 p-3 bg-yellow-900/20 border border-yellow-500/30 rounded-lg text-yellow-400 text-sm">
+                                    🔐 Connect your wallet to vote, report, and trade
+                                </div>
+                            )}
+                            <button className="secondary-btn" onClick={handlePublish} disabled={loading}>
+                                {loading ? 'Publishing...' : 'Publish Analysis'}
+                            </button>
+                            <button className="danger-btn" onClick={() => setShowModal(true)} disabled={!address}>
+                                {address ? 'Report Risk (Whistleblower)' : 'Connect Wallet to Report'}
+                            </button>
                         </div>
-                    )}
 
-                    {auditLog && (
-                        <div className="audit-section">
-                            <h3>Audit Log Published</h3>
-                            <div className="audit-details">
-                                <p><b>Tx ID:</b> <span className="mono">{auditLog.txid}</span></p>
-                                <p><b>Hash:</b> <span className="mono">{auditLog.analysisHash}</span></p>
-                                <p><b>Time:</b> {new Date(auditLog.timestamp).toLocaleString()}</p>
-                            </div>
-                        </div>
-                    )}
-
-                    <TradingPanel />
-
-                    <div className="actions-section">
-                        {!address && (
-                            <div className="mb-4 p-3 bg-yellow-900/20 border border-yellow-500/30 rounded-lg text-yellow-400 text-sm">
-                                🔐 Connect your wallet to vote, report, and trade
-                            </div>
-                        )}
-                        <button className="secondary-btn" onClick={handlePublish} disabled={loading}>
-                            {loading ? 'Publishing...' : 'Publish Analysis'}
-                        </button>
-                        <button className="danger-btn" onClick={() => setShowModal(true)} disabled={!address}>
-                            {address ? 'Report Risk (Whistleblower)' : 'Connect Wallet to Report'}
-                        </button>
-                    </div>
-
-                    {showModal && (
-                        <div className="modal-overlay">
-                            <div className="modal-content">
-                                <h3>Submit Whistleblower Report</h3>
-                                <p>Describe the suspicious activity. This will trigger a ZK-proof verification (simulated).</p>
-                                <textarea
-                                    className="report-input"
-                                    value={reportText}
-                                    onChange={e => setReportText(e.target.value)}
-                                    placeholder="Enter details (min 10 chars)..."
-                                />
-                                <div className="modal-actions">
-                                    <button className="secondary-btn" onClick={() => setShowModal(false)}>Cancel</button>
-                                    <button className="primary-btn" onClick={handleSubmitReport} disabled={loading}>
-                                        {loading ? 'Submitting...' : 'Submit Report'}
-                                    </button>
+                        {showModal && (
+                            <div className="modal-overlay">
+                                <div className="modal-content">
+                                    <h3>Submit Whistleblower Report</h3>
+                                    <p>Describe the suspicious activity. This will trigger a ZK-proof verification (simulated).</p>
+                                    <textarea
+                                        className="report-input"
+                                        value={reportText}
+                                        onChange={e => setReportText(e.target.value)}
+                                        placeholder="Enter details (min 10 chars)..."
+                                    />
+                                    <div className="modal-actions">
+                                        <button className="secondary-btn" onClick={() => setShowModal(false)}>Cancel</button>
+                                        <button className="primary-btn" onClick={handleSubmitReport} disabled={loading}>
+                                            {loading ? 'Submitting...' : 'Submit Report'}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
-            </div>
-        );
-    }
+                        )}
+                    </div>
+                )
+            }
+        </div>
+    );
+}
