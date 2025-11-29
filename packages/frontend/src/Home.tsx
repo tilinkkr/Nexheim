@@ -7,12 +7,20 @@ import WalletAssets from './components/WalletAssets';
 import Head from './components/Head';
 import MasumiChat from './components/MasumiChat';
 import { useWallet } from './context/WalletContext';
-import { Shield, Vote, AlertCircle } from 'lucide-react';
+import { IncidentSheet } from './components/IncidentSheet';
+import type { IncidentDetails } from './types/incident';
 
 export default function Home() {
     const { address } = useWallet();
     const [stats, setStats] = useState({ avgTrust: 0, totalAudits: 0, scamsDetected: 0 });
     const [chatContext, setChatContext] = useState<any>(null);
+    const [activePolicyId, setActivePolicyId] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (activePolicyId) {
+            console.log("Active Policy ID updated:", activePolicyId);
+        }
+    }, [activePolicyId]);
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -32,6 +40,18 @@ export default function Home() {
         return () => clearInterval(interval);
     }, []);
 
+    const mockIncident: IncidentDetails = {
+        policyId: activePolicyId || '',
+        tokenSymbol: 'MOCK',
+        trustScore: 65,
+        trustHistory: [60, 62, 65, 64, 65],
+        masumiSummary: "This token shows signs of high volatility but no direct rug pull indicators. Community sentiment is mixed.",
+        insiderRisk: 45,
+        votesSafe: 120,
+        votesRisky: 45,
+        reportsCount: 3
+    };
+
     return (
         <div className="min-h-screen w-full bg-[#050510] px-8 py-8">
             <Head title="Dashboard | NexGuard" description="Manage your portfolio, view live token feeds, and verify assets." />
@@ -40,7 +60,7 @@ export default function Home() {
             <div className="grid gap-6 lg:grid-cols-3 grid-rows-[320px_auto]">
                 {/* LEFT: Live Threat Feed */}
                 <section className="col-span-1">
-                    <LiveTokenFeed />
+                    <LiveTokenFeed onTokenClick={(p) => setActivePolicyId(p)} />
                 </section>
 
                 {/* CENTER: Trust Index (big center card) */}
@@ -50,34 +70,6 @@ export default function Home() {
 
                 {/* RIGHT: Wallet + Meme Passport stacked */}
                 <section className="col-span-1 flex flex-col gap-4">
-                    {/* Wallet Banner */}
-                    {!address && (
-                        <div className="rounded-3xl bg-[#050510] border border-white/10 p-4 shadow-[0_0_40px_rgba(0,0,0,0.7)]">
-                            <div className="flex items-start gap-3">
-                                <div className="flex-shrink-0">
-                                    <Shield className="w-6 h-6 text-blue-400" />
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className="text-sm font-bold text-white mb-2">Connect Wallet</h3>
-                                    <div className="space-y-1 text-xs text-gray-300">
-                                        <div className="flex items-center gap-2">
-                                            <Vote className="w-3 h-3 text-green-400" />
-                                            <span>Token Minting</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <AlertCircle className="w-3 h-3 text-yellow-400" />
-                                            <span>Whistleblower Reports</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Vote className="w-3 h-3 text-blue-400" />
-                                            <span>Community Voting</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
                     {/* Meme Passport or Wallet Assets */}
                     {address ? (
                         <WalletAssets />
@@ -88,9 +80,20 @@ export default function Home() {
 
                 {/* BOTTOM: Token Explorer full width */}
                 <section className="col-span-full">
-                    <Explorer onAskMasumi={(coin) => setChatContext(coin)} />
+                    <Explorer
+                        onAskMasumi={(coin) => setChatContext(coin)}
+                        onTokenClick={(p) => setActivePolicyId(p)}
+                    />
                 </section>
             </div>
+
+            {/* Incident Sheet */}
+            <IncidentSheet
+                open={!!activePolicyId}
+                onClose={() => setActivePolicyId(null)}
+                loading={false}
+                data={activePolicyId ? mockIncident : null}
+            />
 
             {/* AI Chat Overlay */}
             {chatContext && (

@@ -26,7 +26,11 @@ interface MemeCoin {
     };
 }
 
-export default function LiveTokenFeed() {
+interface LiveTokenFeedProps {
+    onTokenClick?: (policyId: string) => void;
+}
+
+export default function LiveTokenFeed({ onTokenClick }: LiveTokenFeedProps) {
     const [coins, setCoins] = useState<MemeCoin[]>([]);
     const [newCoinAlert, setNewCoinAlert] = useState<MemeCoin | null>(null);
     const [selectedToken, setSelectedToken] = useState<MemeCoin | null>(null);
@@ -207,7 +211,10 @@ export default function LiveTokenFeed() {
                         return (
                             <button
                                 key={coin.id || coin.tokenId || index}
-                                onClick={() => setSelectedToken(coin)}
+                                onClick={() => {
+                                    setSelectedToken(coin);
+                                    if (onTokenClick) onTokenClick(coin.id || coin.tokenId || '');
+                                }}
                                 className={`w-full text-left rounded-xl border px-3 py-2 flex items-center justify-between transition-all duration-200 group
                                     ${trustScore < 50
                                         ? 'bg-red-500/5 hover:bg-red-500/15 border-red-500/30'

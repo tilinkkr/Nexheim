@@ -104,7 +104,7 @@ function stopMemeFactory() {
 app.get('/api/stats/global', async (req, res) => {
     try {
         // Calculate average trust from active meme coins
-        const totalTrust = memeCoins.reduce((acc, coin) => acc + (coin.trustScore || 0), 0);
+        const totalTrust = memeCoins.reduce((acc, coin) => acc + (coin.trust_score || coin.trustScore || 0), 0);
         const avgTrust = memeCoins.length > 0 ? Math.round(totalTrust / memeCoins.length) : 0;
 
         // Get counts (simulated + DB)
@@ -334,7 +334,7 @@ app.get('/api/explorer', async (req, res) => {
 
     // Mix real tokens at the top, then meme coins, then database tokens
     const allTokens = [
-        ...realTokens.map(t => ({ ...t, votes: { agree: 0, disagree: 0 }, reportCount: 0, isUnderReview: false })),
+        ...realTokens.map(t => ({ ...t, tokenId: t.id, votes: { agree: 0, disagree: 0 }, reportCount: 0, isUnderReview: false })),
         ...memeTokens,
         ...dbTokens
     ];
@@ -817,7 +817,7 @@ app.post('/api/generate-meme-identity', async (req, res) => {
     // Ideally we'd use wallet address.
 
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-001" });
         const prompt = `Generate a funny crypto meme identity for seed: "${seed || ''}". Return JSON: { "username": "", "astrology": "", "traits": [{"label":"", "value":""}] }`;
 
         const result = await model.generateContent(prompt);
@@ -839,7 +839,7 @@ app.post('/api/generate-meme-identity', async (req, res) => {
 app.post('/api/masumi-chat', async (req, res) => {
     const { message, context } = req.body;
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
         let enrichedContext = context || {};
 

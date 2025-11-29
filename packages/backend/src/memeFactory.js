@@ -128,7 +128,13 @@ function generateMemeCoin() {
         },
         created_at: new Date().toISOString(),
         source: 'meme_factory',
-        isDisputed: profile === 'scam' || profile === 'risky'
+        isDisputed: profile === 'scam' || profile === 'risky',
+        // Price Simulation
+        price: (Math.random() * 100).toFixed(4),
+        priceChange24h: (Math.random() * 40 - 20).toFixed(2), // -20% to +20%
+        marketCap: (Math.random() * 10000000).toFixed(0),
+        volume24h: (Math.random() * 500000).toFixed(0),
+        trustScore: trustScore // Alias for consistency
     };
 }
 

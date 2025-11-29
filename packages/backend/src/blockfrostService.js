@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const BLOCKFROST_KEY = process.env.BLOCKFROST_API_KEY;
+const BLOCKFROST_KEY = process.env.BLOCKFROST_API_KEY_PREPROD || process.env.BLOCKFROST_API_KEY;
 const BLOCKFROST_URL = 'https://cardano-preprod.blockfrost.io/api/v0';
 
 const api = axios.create({
@@ -58,6 +58,50 @@ async function fetchRealToken(assetId) {
             }
         }
 
+        // Heuristic Price Calculation (ADA / Token)
+        // We assume the largest holder is a Liquidity Pool (LP)
+        let price = 0;
+        let liquidity = 0;
+        let marketCap = 0;
+
+        if (addresses.data.length > 0) {
+            // Get top holder (likely pool)
+            const topHolder = addresses.data.reduce((prev, current) =>
+                (parseInt(prev.quantity) > parseInt(current.quantity)) ? prev : current
+            );
+
+            try {
+                // Fetch ADA balance of the top holder
+                const holderInfo = await api.get(`/addresses/${topHolder.address}`);
+                const adaBalance = holderInfo.data.amount.find(a => a.unit === 'lovelace');
+
+                if (adaBalance) {
+                    const adaAmount = parseInt(adaBalance.quantity) / 1000000; // Convert lovelace to ADA
+                    const tokenAmount = parseInt(topHolder.quantity); // Raw units
+                    const decimals = asset.metadata?.decimals || 0;
+                    const adjustedTokenAmount = tokenAmount / Math.pow(10, decimals);
+
+                    if (adjustedTokenAmount > 0) {
+                        price = adaAmount / adjustedTokenAmount;
+                        liquidity = adaAmount * 2; // Rough TVL estimate (ADA side * 2)
+
+                        // Calculate Market Cap
+                        const totalSupply = parseInt(asset.quantity) / Math.pow(10, decimals);
+                        marketCap = totalSupply * price;
+
+                        console.log(`[Price] Calculated for ${assetId}: ${price.toFixed(6)} ADA (Pool: ${topHolder.address.slice(0, 10)}...)`);
+                    }
+                }
+            } catch (err) {
+                console.warn(`[Price] Failed to fetch holder balance for ${assetId}: ${err.message}`);
+            }
+        }
+
+        // Fallback if price calculation failed (avoid 0 for demo)
+        if (price === 0) {
+            price = 0.001 + Math.random() * 0.01; // Simulated fallback
+        }
+
         return {
             id: assetId,
             policyId: asset.policy_id,
@@ -73,11 +117,11 @@ async function fetchRealToken(assetId) {
             metadata: asset.onchain_metadata,
             source: 'blockfrost',
             createdAt: new Date().toISOString(),
-            price: 0.001 + Math.random() * 0.01, // Simulated price for demo
+            price: price.toFixed(6),
             priceChange24h: (Math.random() * 20 - 10).toFixed(2),
             volume24h: Math.floor(Math.random() * 100000),
-            marketCap: Math.floor(Math.random() * 1000000),
-            liquidity: Math.floor(Math.random() * 500000)
+            marketCap: marketCap > 0 ? marketCap.toFixed(0) : Math.floor(Math.random() * 1000000),
+            liquidity: liquidity > 0 ? liquidity.toFixed(0) : Math.floor(Math.random() * 500000)
         };
     } catch (error) {
         console.error(`Failed to fetch token ${assetId}:`, error.message);
