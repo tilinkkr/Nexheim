@@ -1095,4 +1095,5 @@ setInterval(() => {
     // logger.info('Heartbeat');
 }, 60000);
 
-app.listen(5001, () => logger.info('Backend listening at http://localhost:5001'));
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => logger.info(`Backend listening at http://localhost:${PORT}`));
