@@ -21,7 +21,7 @@ export type HypeRatioData = {
     cached?: boolean;
 };
 
-const API_BASE = (import.meta.env.VITE_API_URL as string) || 'http://localhost:5001';
+const API_BASE = (import.meta.env.VITE_API_URL as string) || `http://${window.location.hostname}:5001`;
 
 export function useHypeRatio(policyId: string | null, windowStr = '60m') {
     const [data, setData] = useState<HypeRatioData | null>(null);
@@ -43,7 +43,7 @@ export function useHypeRatio(policyId: string | null, windowStr = '60m') {
             setLoading(true);
             setError(null);
             try {
-                const res = await fetch(`${API_BASE}/api/tokens/${encodeURIComponent(policyId)}/hype-ratio?window=${encodeURIComponent(windowStr)}`, { signal: controller.signal });
+                const res = await fetch(`${API_BASE}/api/tokens/${encodeURIComponent(policyId!)}/hype-ratio?window=${encodeURIComponent(windowStr)}`, { signal: controller.signal });
                 if (!res.ok) {
                     const text = await res.text();
                     throw new Error(`HTTP ${res.status}: ${text}`);

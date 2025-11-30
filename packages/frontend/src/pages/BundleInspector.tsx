@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Search, AlertTriangle, Network } from 'lucide-react';
 import AntigravityGraph from '../components/AntigravityGraph';
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_BASE = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:8000`;
 
 export default function BundleInspector() {
     const [policyId, setPolicyId] = useState('');

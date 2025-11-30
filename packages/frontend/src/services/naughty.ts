@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:8000`;
 
 // In a real app, this key should probably be proxied or handled more securely,
 // but for this hackathon demo/local setup, we'll use the env var or hardcoded key.

@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_BASE = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:8000`;
 
 // --- Components ---
 
@@ -187,7 +187,7 @@ function AnalysisResult({ data }: { data: any }) {
                         <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
                             <div
                                 className={`h-full rounded-full ${platform.platform === 'x' ? 'bg-blue-500' :
-                                        platform.platform === 'telegram' ? 'bg-cyan-500' : 'bg-pink-500'
+                                    platform.platform === 'telegram' ? 'bg-cyan-500' : 'bg-pink-500'
                                     }`}
                                 style={{ width: `${Math.min((platform.count / data.sampleSize) * 100 * 2, 100)}%` }} // Mock percentage
                             ></div>

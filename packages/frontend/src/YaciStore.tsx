@@ -12,10 +12,11 @@ export default function YaciStore() {
         if (!assetId) return;
         setLoading(true);
         try {
-            const assetRes = await axios.get(`http://localhost:4000/yaci/assets/${assetId}`);
+            const baseUrl = `http://${window.location.hostname}:4000`;
+            const assetRes = await axios.get(`${baseUrl}/yaci/assets/${assetId}`);
             setAssetData(assetRes.data);
 
-            const txsRes = await axios.get(`http://localhost:4000/yaci/txs/${assetId}`);
+            const txsRes = await axios.get(`${baseUrl}/yaci/txs/${assetId}`);
             setTxs(txsRes.data);
         } catch (err) {
             console.error("Failed to fetch Yaci data", err);
@@ -76,8 +77,8 @@ export default function YaciStore() {
                             </thead>
                             <tbody>
                                 {txs.map((tx, i) => {
-                                    const txHash = tx?.tx_hash && typeof tx.tx_hash === 'string' 
-                                        ? tx.tx_hash.slice(0, 10) + '...' 
+                                    const txHash = tx?.tx_hash && typeof tx.tx_hash === 'string'
+                                        ? tx.tx_hash.slice(0, 10) + '...'
                                         : 'N/A';
                                     return (
                                         <tr key={i} className="token-row">

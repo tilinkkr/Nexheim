@@ -16,7 +16,8 @@ export function RugMeter({ policyId }: RugMeterProps) {
     const fetchRugScore = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:5001/api/tokens/${policyId}/rug-score`);
+            const baseUrl = `http://${window.location.hostname}:5001/api`;
+            const response = await fetch(`${baseUrl}/tokens/${policyId}/rug-score`);
             const result = await response.json();
             setData(result);
         } catch (error) {

@@ -9,6 +9,7 @@ import MasumiChat from './components/MasumiChat';
 import { useWallet } from './context/WalletContext';
 import { IncidentSheet } from './components/IncidentSheet';
 import type { IncidentDetails } from './types/incident';
+import API_URL from './apiConfig';
 
 export default function Home() {
     const { address } = useWallet();
@@ -25,7 +26,7 @@ export default function Home() {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const res = await fetch('http://localhost:5001/api/stats/global');
+                const res = await fetch(`${API_URL}/stats/global`);
                 if (res.ok) {
                     const data = await res.json();
                     setStats(data);

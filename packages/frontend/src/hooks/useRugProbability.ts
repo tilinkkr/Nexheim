@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { RugProbabilityData } from '../types/risk.types';
+import type { RugProbabilityData } from '../types/risk.types';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+const API_URL = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:5001`;
 
 export function useRugProbability(policyId: string) {
     const [data, setData] = useState<RugProbabilityData | null>(null);

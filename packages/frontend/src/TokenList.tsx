@@ -12,7 +12,8 @@ export default function TokenList({ onSelect }: { onSelect: (tid: string) => voi
     const [tokens, setTokens] = useState<any[]>([]);
 
     const fetchTokens = () => {
-        axios.get("http://localhost:4000/tokens").then(res => setTokens(res.data));
+        const baseUrl = `http://${window.location.hostname}:4000`;
+        axios.get(`${baseUrl}/tokens`).then(res => setTokens(res.data));
     };
 
     useEffect(() => {

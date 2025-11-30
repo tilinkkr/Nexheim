@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000/api';
+const API_BASE = import.meta.env.VITE_API_BASE || `http://${window.location.hostname}:5001/api`;
 
 export async function fetchJSON(path, { method = 'GET', body = null, token = null } = {}) {
     const headers = { 'Accept': 'application/json' };
