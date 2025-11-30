@@ -1,3 +1,8 @@
+📝 To run on another laptop:
+git clone <your-repo>
+npm install (Installs ALL dependencies automatically)
+npm run dev (Starts Frontend + Backend)
+
 # 🛡️ NexGuard: Forensic Intelligence for Cardano
 
 > **De-anonymizing the blockchain to detect insider threats, rug pulls, and hidden cabals.**
