@@ -1,0 +1,32 @@
+.yaci-container {
+    margin-top: 40px;
+    border-top: 1px solid var(--border);
+    padding-top: 40px;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    max-width: 500px;
+}
+
+.search-box .input-field {
+    flex: 1;
+}
+
+.results-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .results-area {
+        grid-template-columns: 1fr;
+    }
+}
+
+.small {
+    font-size: 0.85rem;
+}

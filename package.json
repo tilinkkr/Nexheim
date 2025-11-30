@@ -1,0 +1,20 @@
+{
+  "name": "nexguards",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm start --prefix packages/backend",
+    "postinstall": "node scripts/postinstall.js",
+    "dev": "concurrently \"npm run dev --prefix packages/backend\" \"npm run dev --prefix packages/frontend\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {},
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
