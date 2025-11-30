@@ -1,4 +1,3 @@
-```
 const { execSync } = require('child_process');
 
 if (process.env.VERCEL) {
@@ -22,4 +21,3 @@ if (process.env.VERCEL) {
     process.exit(1);
   }
 }
-```
