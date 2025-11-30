@@ -2,36 +2,6 @@
 
 > **De-anonymizing the blockchain to detect insider threats, rug pulls, and hidden cabals.**
 
-NexGuard is the first **Forensic Intelligence Platform** designed to visualize hidden financial relationships between wallets. We don't just tell you *who owns the token*; we tell you *who owns the wallets*. By combining **Recursive Funding Trace** algorithms with **Masumi AI** and **ZK-Whistleblowing**, NexGuard shifts the paradigm from "Don't Trust, Verify" to **"Verify with Intelligence."**
-
----
-
-## 🚀 Quick Start
-
-### 1. Installation
-Since this is a monorepo, you need to install dependencies for both the frontend and backend.
-
-```bash
-# 1. Install root dependencies (for concurrent runner)
-npm install
-
-# 2. Install Backend dependencies
-cd packages/backend
-npm install
-
-# 3. Install Frontend dependencies
-cd ../frontend
-npm install
-
-# 4. Return to root
-cd ../..
-```
-
-### 2. Environment Setup
-Create a `.env` file in `packages/backend`:
-
-```bash
-cd packages/backend
 cp .env.example .env
 ```
 *   **Optional**: Add your `BLOCKFROST_API_KEY` (for real Cardano data) and `GEMINI_API_KEY` (for AI features) to `.env`.
