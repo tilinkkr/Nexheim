@@ -1,6 +1,9 @@
 from typing import Dict, Any
 import json
-from .masumi_client import run_masumi_task
+try:
+    from .masumi_client import run_masumi_task
+except ImportError:
+    from masumi_client import run_masumi_task
 
 async def analyze_mpm_for_token(token_context: Dict[str, Any]) -> Dict[str, Any]:
     """
