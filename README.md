@@ -59,7 +59,7 @@ The project uses **SQLite** for simplicity and portability.
 
 ## 🎥 Demo
 
-**[Insert Demo Video/Link Here]**
+[**[Insert Demo Video/Link Here]**](https://youtu.be/tPNhfBtxxYE)
 
 ---
 
