@@ -60,7 +60,7 @@ export default function Home() {
             <div className="grid gap-6 lg:grid-cols-3 grid-rows-[320px_auto]">
                 {/* LEFT: Live Threat Feed */}
                 <section className="col-span-1">
-                    <LiveTokenFeed onTokenClick={(p) => setActivePolicyId(p)} />
+                    <LiveTokenFeed onTokenClick={(p) => setActivePolicyId(p)} disableModal={true} />
                 </section>
 
                 {/* CENTER: Trust Index (big center card) */}

@@ -28,9 +28,10 @@ interface MemeCoin {
 
 interface LiveTokenFeedProps {
     onTokenClick?: (policyId: string) => void;
+    disableModal?: boolean;
 }
 
-export default function LiveTokenFeed({ onTokenClick }: LiveTokenFeedProps) {
+export default function LiveTokenFeed({ onTokenClick, disableModal = false }: LiveTokenFeedProps) {
     const [coins, setCoins] = useState<MemeCoin[]>([]);
     const [newCoinAlert, setNewCoinAlert] = useState<MemeCoin | null>(null);
     const [selectedToken, setSelectedToken] = useState<MemeCoin | null>(null);
@@ -214,7 +215,7 @@ export default function LiveTokenFeed({ onTokenClick }: LiveTokenFeedProps) {
                             <button
                                 key={coin.id || coin.tokenId || index}
                                 onClick={() => {
-                                    setSelectedToken(coin);
+                                    if (!disableModal) setSelectedToken(coin);
                                     if (onTokenClick) onTokenClick(coin.id || coin.tokenId || '');
                                 }}
                                 className={`w-full text-left rounded-xl border px-3 py-2 flex items-center justify-between transition-all duration-200 group

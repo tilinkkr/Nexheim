@@ -51,7 +51,7 @@ export default function PolicyXRay() {
 
                 {/* Sidebar: Live Token Feed */}
                 <div className="lg:col-span-1 h-[600px] sticky top-24">
-                    <LiveTokenFeed onTokenClick={(id) => handleScan(id)} />
+                    <LiveTokenFeed onTokenClick={(id) => handleScan(id)} disableModal={true} />
                 </div>
 
                 {/* Main Content Area */}

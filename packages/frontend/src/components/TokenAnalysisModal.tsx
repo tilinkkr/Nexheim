@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import { X, TrendingUp, TrendingDown, Users, Droplet, Shield, AlertTriangle, Brain, Target } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -136,8 +137,8 @@ export default function TokenAnalysisModal({ token, onClose }: TokenAnalysisModa
         { name: 'Liquidity', value: `$${(liquidity / 1000).toFixed(1)}K`, penalty: liquidity < 10000 ? -20 : 0, rule: liquidity < 10000 ? 'Low' : 'Healthy' }
     ];
 
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    return createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
             <div className="relative w-full max-w-6xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-gray-900 via-gray-900 to-black border border-gray-700 rounded-3xl shadow-2xl">
 
                 {/* Header */}
@@ -376,6 +377,7 @@ export default function TokenAnalysisModal({ token, onClose }: TokenAnalysisModa
                     </div>
                 )}
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
